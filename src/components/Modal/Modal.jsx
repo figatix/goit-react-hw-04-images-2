@@ -10,20 +10,26 @@ const modalRoot = document.querySelector('#modal-root')
 export const Modal = ({ onCloseModal, children }) => {
   
   useEffect(() => {
-    window.addEventListener('keydown', handlerCloseModal)
-    return () => window.removeEventListener('keydown', handlerCloseModal);
-  }, )
+    const onEscKeyDown = e => {
+      const isEscBtn = e.code === "Escape";
+      if (isEscBtn) {
+        onCloseModal();
+      }
+    };
 
-  const handlerCloseModal = (e) => {
-    const isEscBtn = e.code === "Escape";
+    window.addEventListener('keydown', onEscKeyDown)
+    return () => window.removeEventListener('keydown', onEscKeyDown);
+  }, [onCloseModal])
+
+  const handlerCloseModalByClick = (e) => {
     const isBackdrop = e.target === e.currentTarget;
-    if (isEscBtn || isBackdrop) {
+    if (isBackdrop) {
       onCloseModal()
     }
   }
 
   return createPortal(
-    <StyledOverlay onClick={handlerCloseModal}>
+    <StyledOverlay onClick={handlerCloseModalByClick}>
       <StyledModal >
         {children}
       </StyledModal>
